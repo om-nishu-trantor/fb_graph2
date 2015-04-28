@@ -13,7 +13,12 @@ RSpec.configure do |config|
     c.syntax = [:should, :expect]
   end
 end
+begin
+	_files_to_require = Dir[File.join(__dir__, 'spec_helper/*.rb')]
+rescue
+	_files_to_require = Dir[File.join(File.dirname(File.realpath(__FILE__)), 'spec_helper/*.rb')]
+end
 
-Dir[File.join(__dir__, 'spec_helper/*.rb')].each do |file|
+_files_to_require.each do |file|
   require file
 end

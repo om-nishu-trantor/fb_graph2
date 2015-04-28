@@ -7,7 +7,14 @@ module FbGraph2
 
   self.root_url = 'https://graph.facebook.com'
   self.api_version = 'v2.3'
-  self.gem_version = File.read(File.join(__dir__, '../VERSION')).strip
+  begin
+    self.gem_version = File.read(File.join(__dir__, '../VERSION')).strip
+  rescue NameError => e
+    self.gem_version = ::File.read(
+        ::File.join(::File.dirname(__FILE__), '../VERSION')
+    ).strip
+  end
+
   self.logger = Logger.new(STDOUT)
   self.logger.progname = 'FbGraph2'
   self.object_classes = Array.new
@@ -50,7 +57,12 @@ require_relative 'fb_graph2/edge'
   '',
   'request_filter'
 ].each do |dir|
-  Dir[File.join(__dir__, 'fb_graph2', dir, '*.rb')].each do |file|
+  begin
+    _files_to_be_required = Dir[File.join(__dir__, 'fb_graph2', dir, '*.rb')]
+  rescue NameError => e
+    _files_to_be_required = Dir[File.join(File.dirname(File.realpath(__FILE__)), 'fb_graph2', dir, '*.rb')]
+  end
+  _files_to_be_required.each do |file|
     require file
   end
 end

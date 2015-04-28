@@ -54,6 +54,11 @@ module FbGraph2
   end
 end
 
-Dir[File.join(__dir__, 'auth/*.rb')].each do |file|
+begin
+  _files_to_require = Dir[File.join(__dir__, 'auth/*.rb')]
+rescue NameError => e
+  _files_to_require = Dir[File.join(File.dirname(File.realpath(__FILE__)), 'auth/*.rb')]
+end
+_files_to_require.each do |file|
   require file
 end
